@@ -64,7 +64,7 @@ export default function Todo({
 
       exitAnimation();
     }
-  }, [isPresent]);
+  }, [isPresent, animate, checked, scope, safeToRemove]);
 
   return (
     <motion.div
