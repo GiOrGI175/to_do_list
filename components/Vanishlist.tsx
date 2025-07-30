@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { useState } from 'react';
 import Header from './Header';
@@ -15,14 +15,29 @@ export type todosT = {
 };
 
 export default function VanishList() {
-  const [todos, setTodos] = useState<todosT[]>([
-    {
-      id: 1,
-      text: 'Take out trash',
-      checked: false,
-      time: '5 mins',
-    },
-  ]);
+  const [todos, setTodos] = useState<todosT[]>([]);
+  const [hasChecked, setHasChecked] = useState(false);
+
+  useEffect(() => {
+    if (hasChecked && todos.length > 0) {
+      const todosString = JSON.stringify(todos);
+
+      localStorage.setItem('Todos', todosString);
+    }
+  }, [todos, hasChecked]);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const savedTodosString = localStorage.getItem('Todos');
+
+      if (savedTodosString) {
+        const savedTodos = JSON.parse(savedTodosString);
+        setTodos(savedTodos);
+      }
+
+      setHasChecked(true);
+    }
+  }, []);
 
   const handleCheck = (id: number) => {
     setTodos((pv) =>
